@@ -1,0 +1,247 @@
+/* ------------------
+        GENERIC 
+-------------------- */
+
+
+* {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.framed>*:last-child {
+    margin-bottom: 0 !important;
+}
+
+html {
+    height: 100%;
+}
+
+html,
+body {
+    overflow-x: hidden;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    color: #3D4456;
+    line-height: 1.75;
+    font-size: 1.125rem;
+    min-height: 100%;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+img {
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+p {
+    margin: 0 0 24px
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    line-height: 1;
+    color: #0250A3;
+    margin: 0 0 24px;
+    overflow-wrap: break-word;
+    -webkit-hyphens: auto;
+    -ms-hyphens: auto;
+    hyphens: auto;
+}
+
+h1 {
+    font-size: 2.25rem;
+}
+
+h2 {
+    font-size: 2rem;
+}
+
+
+.container {
+    display: block;
+    width: 100%;
+    max-width: 962px;
+    margin: 0 auto;
+    padding-left: 16px;
+    padding-right: 16px;
+    position: relative;
+    opacity: 1;
+}
+
+.framed {
+    border: solid 1px #ededed;
+    border-radius: 16px;
+    padding: 16px;
+    position: relative;
+}
+
+.section-margin {
+    margin-bottom: 46px;
+}
+
+.btn-primary {
+    background-color: #0250A3;
+    border: none;
+    border-radius: 32px;
+    color: #fff;
+    line-height: 1;
+    font-weight: 500;
+    padding: 16px 32px;
+    box-shadow: none;
+    transform: scale(1);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover,
+    &:focus {
+        background-color: #002d5c;
+        box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0250A3;
+    }
+}
+
+.btn-primary:active {
+    background-color: #0250A3;
+    box-shadow: none;
+    transform: scale(0.95);
+}
+
+@media screen and (min-width: 768px) {
+    h1 {
+        font-size: 2.625rem;
+    }
+
+    h2 {
+        font-size: 2.25rem;
+    }
+
+    .framed {
+        padding: 24px;
+    }
+}
+
+/* ------------------
+        FORM 
+-------------------- */
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px
+}
+
+.invalid {
+    input {
+        box-shadow: 0 0 0 2px #fff, 0 0 0 4px red;
+    }
+
+    &::after {
+        content: 'This field is required';
+        color: red;
+        display: block;
+        left: 0;
+        font-size: 14px;
+        margin-top: 8px;
+    }
+}
+
+label {
+    margin-bottom: 8px;
+}
+
+input {
+    height: 53px;
+    padding: 16px;
+}
+
+input {
+    border: solid 1px #ededed;
+    border-radius: 8px;
+    color: #555;
+    box-shadow: none;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:focus,
+    &:focus-visible {
+        border: solid 1px #ededed;
+        box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0250A3;
+        outline: none;
+    }
+}
+
+.backdrop {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #fff;
+    opacity: 0.7;
+    z-index: 100;
+}
+
+/* ------------------
+        FOOTER 
+-------------------- */
+
+footer {
+    padding-bottom: 16px;
+    color: #555;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* ------------------
+        Utils 
+-------------------- */
+
+.sr-only {
+    clip: rect(1px, 1px, 1px, 1px);
+    -webkit-clip-path: inset(50%);
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+
+    img {
+        max-width: none;
+    }
+}
+
+.space-between {
+    justify-content: space-between;
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.transition {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition.hidden {
+    display: block;
+    opacity: 0;
+}
+
+.hidden {
+    display: none;
+}
