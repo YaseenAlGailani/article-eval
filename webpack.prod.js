@@ -10,6 +10,17 @@ module.exports = merge(common, {
         path: path.resolve(__dirname, 'dist'),
         clean:'true'
     },
+    module:{
+        rules:[
+            {
+                test: /\.(png|svg|jpg)/i,
+                type: 'asset/resource',
+                generator: {
+                    filename: 'images/[name].[hash][ext]'
+                }
+            }
+        ]
+    },
     optimization: {
         minimizer:[
             '...',

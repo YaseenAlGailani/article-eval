@@ -1,6 +1,6 @@
-const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const postcssPresetEnv = require('postcss-preset-env')
 
 module.exports = {
     entry: './src/client/index.js',
@@ -16,6 +16,14 @@ module.exports = {
                 use: [
                     MiniCssExtractPlugin.loader,
                     "css-loader",
+                    {
+                        loader: 'postcss-loader',
+                        options: {
+                            postcssOptions: {
+                                plugins: [postcssPresetEnv()],
+                            },
+                        },
+                    },
                     "sass-loader",
                 ],
             },
@@ -25,9 +33,9 @@ module.exports = {
             }
         ]
     },
-    plugin: [
+    plugins: [
         new HtmlWebpackPlugin({
-            template:'./src/client/index.html'
+            template:'./src/client/views/index.html'
         }),
         new MiniCssExtractPlugin()
     ]

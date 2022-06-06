@@ -1,0 +1,40 @@
+/* ------------------
+        Utils 
+-------------------- */
+
+.sr-only {
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
+    height: 1px;
+    width: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+}
+
+.flex-row {
+    display: flex;
+    flex-direction: row;
+
+    img {
+        max-width: none;
+    }
+}
+
+.flex-wrap {
+    flex-wrap: wrap;
+}
+
+.transition {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.transition.hidden {
+    display: block;
+    opacity: 0;
+}
+
+.hidden {
+    display: none;
+}

@@ -9,21 +9,43 @@
 </head>
 
 <body>
-    <header>
-        <h1>Article Eval</h1>
+    <header class="container">
+        <div class="logo-container">
+            <img src="../images/AE_logo.svg" alt="Article Eval Logo">
+        </div>
+        <h1 class="sr-only">Article Eval</h1>
     </header>
     <main>
-        <form id="eval-form">
-            <div class="form-group">
-                <label for="eval-url">Enter URL of the article you would like to evaluate</label>
-                <input id="eval-url" type="text">
-            </div>
-            <button class="btn-primary" type="submit">Evaluate</button>
-        </form>
-        <section id="eval-results">
-            <h2>Evaluation</h2>
+        <section class="container section-margin">
             <div class="framed">
-                <div class="flex-row">
+                <div class="section-margin">
+                    <h2>Hi there, welcome to Article Eval</h2>
+                    <p>Article Eval allows you to run Natural Language Processing (NLP) on articles or blogs found on other websites.</p>
+                    <p>Have a great day!</p>
+                </div>
+                <div role="alert" id="error-box" class='box hidden'>
+                    <div class="framed">
+                        <h2>Something went wrong</h2>
+                        <p class="error"></p>
+                    </div>
+                    <button class="close-btn">
+                        <span class="sr-only">Close</span>
+                        <img aria-hidden="true" src="../images/close_icon.svg" alt="close">
+                    </button>
+                </div>
+                <form id="eval-form">
+                    <div class="form-group">
+                        <label for="eval-url">Enter URL of the article you would like to evaluate</label>
+                        <input id="eval-url" type="text">
+                    </div>
+                    <button class="btn-primary" type="submit">Evaluate</button>
+                </form>
+            </div>
+        </section>
+        <section id="eval-results" class="container hidden">
+            <div class="framed">
+                <h2>Evaluation</h2>
+                <div class="flex-row flex-wrap inner-margin" id="results">
                     <div>Polarity: <span id="pol"></span></div>
                     <div>Subjectivity: <span id="sub"></span></div>
                 </div>
@@ -33,6 +55,9 @@
             </div>
         </section>
     </main>
+    <footer class="container">
+        <p>TheGailani <span id="footer-date">2022</span></p>
+    </footer>
 </body>
 
 </html>
