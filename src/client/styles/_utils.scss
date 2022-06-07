@@ -31,10 +31,10 @@
 }
 
 .transition.hidden {
-    display: block;
+    display: block !important;
     opacity: 0;
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }

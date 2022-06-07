@@ -5,8 +5,9 @@ import fetcher from './js/fetcher'
 window.addEventListener('DOMContentLoaded',function(){
 
     const closeButtons = document.querySelectorAll('.close-btn');
-    const evalButton = document.querySelector('#eval-form button[type=submit]');
+    const evalForm = document.querySelector('#eval-form');
     const evalResults = document.getElementById('eval-results');
+
     const $placeholders = {
         polarity: document.getElementById('pol'),
         subjectivity: document.getElementById('sub'),
@@ -26,11 +27,12 @@ window.addEventListener('DOMContentLoaded',function(){
         });
     });
 
-    evalButton.addEventListener('click', function(e){
+    evalForm.addEventListener('submit', function(e){
         e.preventDefault();
         const artcileURL = document.getElementById('eval-url').value;
-
+        const backdrop = document.querySelector('.backdrop');
         transitions.fadeOut(evalResults);
+        transitions.fadeIn(backdrop);
 
         fetcher.text('http://localhost:3000/MCk').then(key=>{
           return fetcher.JSON(`https://api.meaningcloud.com/sentiment-2.1?key=${key}&lang=en&url=${artcileURL}`)
@@ -41,6 +43,7 @@ window.addEventListener('DOMContentLoaded',function(){
             $placeholders.sentences.innerText = values.sentences;
 
             transitions.fadeIn(evalResults);
+            transitions.fadeOut(backdrop);    
         })
     })
 });

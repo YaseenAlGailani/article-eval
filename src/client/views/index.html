@@ -26,7 +26,7 @@
                 <div role="alert" id="error-box" class='box hidden'>
                     <div class="framed">
                         <h2>Something went wrong</h2>
-                        <p class="error"></p>
+                        <p class="message"></p>
                     </div>
                     <button class="close-btn">
                         <span class="sr-only">Close</span>
@@ -40,6 +40,9 @@
                     </div>
                     <button class="btn-primary" type="submit">Evaluate</button>
                 </form>
+                <div class="backdrop hidden">
+                    <img src="../images/spinner.svg" alt="Loading">
+                </div>
             </div>
         </section>
         <section id="eval-results" class="container hidden">
