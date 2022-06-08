@@ -21,6 +21,10 @@
         font-size: 14px;
         margin-top: 8px;
     }
+
+    &.bad-url::after{
+        content: 'invalid URL format';
+    }
 }
 
 label {
@@ -79,7 +83,7 @@ input {
         font-weight: 400;
     }
 
-    & .error {
+    & .message {
         font-size: 1rem;
         color: #333;
     }
