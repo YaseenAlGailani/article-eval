@@ -36,7 +36,7 @@
                 <form id="eval-form">
                     <div class="form-group">
                         <label for="eval-url">Enter URL of the article you would like to evaluate</label>
-                        <input id="eval-url" type="text">
+                        <input id="eval-url" name="eval_url" type="text">
                     </div>
                     <button class="btn-primary" type="submit">Evaluate</button>
                 </form>
@@ -45,11 +45,11 @@
                 </div>
             </div>
         </section>
-        <section id="eval-results" class="container hidden">
+        <section id="eval-results" class="container hidden section-margin">
             <div class="framed">
                 <h2>Evaluation</h2>
                 <div class="flex-row flex-wrap inner-margin" id="results">
-                    <div>Polarity: <span id="pol"></span></div>
+                    <div>Polarity: <span id="pol"><x/span></div>
                     <div>Subjectivity: <span id="sub"></span></div>
                 </div>
                 <div class="flex-row">

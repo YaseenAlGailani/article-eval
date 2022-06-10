@@ -1,104 +1,154 @@
 import './styles/main.scss'
-import transitions from './js/transitions'
-import fetcher from './js/fetcher'
-import validate from './js/validation'
+import getEvaluation from './js/getEvaluation'
 
 window.addEventListener('DOMContentLoaded', function () {
 
-    const closeButtons = document.querySelectorAll('.close-btn');
-    const evalForm = document.querySelector('#eval-form');
-    const evalResults = document.getElementById('eval-results');
-    const errorBox = document.getElementById('error-box');
+  const closeButtons = document.querySelectorAll('.close-btn');
+  const evalForm = document.querySelector('#eval-form');
 
-    const $placeholders = {
-        polarity: document.getElementById('pol'),
-        subjectivity: document.getElementById('sub'),
-        sentences: document.getElementById('sentences')
+  closeButtons.forEach(button => {
+    button.addEventListener('click', function () {
+      const parent = this.closest('.container, .box');
+      if (parent.classList.contains('message')) {
+        transitions.fadeInOut(parent).then(() => {
+          parent.remove();
+        })
+      } else {
+        transitions.fadeInOut(parent);
+      }
+    });
+  });
+
+  evalForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    if (!validate.isValid(e.target)) return;
+    let inputValues = getUserInput(e.target);
+
+    try {
+      updateUI.fetching();
+      const data = await getEvaluation(inputValues);
+      updateUI.dispResults(data);
+    }
+    catch (error) {
+      updateUI.error(error);
     }
 
-    closeButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            const parent = this.closest('.container, .box');
-            if (parent.classList.contains('message')) {
-                transitions.fadeInOut(parent).then(() => {
-                    parent.remove();
-                })
-            } else {
-                transitions.fadeInOut(parent);
-            }
-        });
-    });
-
-    evalForm.addEventListener('submit', function (e) {
-        e.preventDefault();
-
-        if (!validate.isValid(evalForm)) return ;
-        const URLInput = document.getElementById('eval-url');
-        const backdrop = document.querySelector('.backdrop');
-
-        transitions.fadeOut(errorBox);
-        transitions.fadeOut(evalResults);
-        transitions.fadeIn(backdrop);
-
-        fetcher.text('http://localhost:3000/MCk').then(key => {
-            return fetcher.JSON(`https://api.meaningcloud.com/sentiment-2.1?key=${key}&lang=en&url=${URLInput.value}`)
-        }).then(evaluation => {
-            const values = evalParser(evaluation);
-
-            $placeholders.polarity.innerText = values.polarity;
-            $placeholders.subjectivity.innerText = values.subjectivity;
-            $placeholders.sentences.innerText = values.sentences;
-
-            transitions.fadeIn(evalResults);
-            transitions.fadeOut(backdrop);
-        }).catch(error => {
-            errorBox.querySelector('.message').innerHTML = error;
-            transitions.fadeOut(backdrop);
-            transitions.fadeIn(errorBox);
-        })
-    })
+  })
 });
 
-const evalParser = (data) => {
+function getUserInput(form) {
 
-    if (data.status.code > 0) {
-        throw (data.status.msg);
-    }
+  let inputValues = {}
+  form.querySelectorAll('input').forEach(input => {
+    inputValues[input.name] = input.value;
+  });
 
-    let polarity = '';
-    switch (data.score_tag) {
-        case 'P+':
-            polarity = 'Strong positive';
-            break;
-        case 'P':
-            polarity = 'Positive';
-            break;
-        case 'NEU':
-            polarity = 'Neutral';
-            break;
-        case 'N':
-            polarity = 'Negative';
-            break;
-        case 'N+':
-            polarity = 'Strong negative';
-            break;
-        case 'NONE':
-            polarity = 'Without polarity';
-            break;
-    }
-
-    let sentences = '';
-
-    for (let i = 0; i < 3; i++) {
-        sentences += data.sentence_list[i].text;
-    }
-
-    sentences = sentences.replace(/(\.)([A-Z])/g, ". $2");
-
-    return {
-        polarity,
-        subjectivity: data.subjectivity.charAt(0).concat(data.subjectivity.substring(1).toLowerCase()),
-        sentences
-    }
+  return inputValues;
 }
 
+const updateUI = {
+
+  fetching() {
+    transitions.fadeOut(document.getElementById('error-box'));
+    transitions.fadeOut(document.getElementById('eval-results'));
+    transitions.fadeIn(document.querySelector('.backdrop'));
+  },
+  dispResults(values) {
+    document.getElementById('pol').innerText = values.polarity;
+    document.getElementById('sub').innerText = values.subjectivity;
+    document.getElementById('sentences').innerText = values.sentences;
+
+    transitions.fadeIn(document.getElementById('eval-results'));
+    transitions.fadeOut(document.querySelector('.backdrop'));
+  },
+  error(error) {
+    document.getElementById('error-box').querySelector('.message').innerHTML = error;
+    transitions.fadeOut(document.querySelector('.backdrop'));
+    transitions.fadeIn(document.getElementById('error-box'));
+  }
+
+}
+
+const transitions = (() => {
+
+  const handleTransEnd = element => {
+    return new Promise((resolve) => {
+      const callback = (e) => {
+        e.stopPropagation();
+        element.classList.remove('transition');
+        resolve(callback);
+      }
+      element.addEventListener('transitionend', callback);
+    }).then((callback) => {
+      element.removeEventListener('transitionend', callback);
+    });
+  }
+
+  return {
+    fadeInOut: element => {
+      if (element.classList.contains('hidden')) {
+        element.classList.add('transition');
+        element.clientHeight;
+        element.classList.remove('hidden');
+      } else {
+        element.classList.add('transition');
+        element.classList.add('hidden');
+      }
+      return handleTransEnd(element);
+    },
+    fadeIn: element => {
+      if (element.classList.contains('hidden')) {
+        element.classList.add('transition');
+        element.clientHeight;
+        element.classList.remove('hidden');
+        return handleTransEnd(element);
+      }
+    },
+    fadeOut: element => {
+      if (!element.classList.contains('hidden')) {
+        element.classList.add('transition');
+        element.classList.add('hidden');
+        return handleTransEnd(element);
+      }
+    },
+  }
+})()
+
+const validate = (() => {
+
+  let eventAttached = false;
+
+  function focusCB(e) {
+    eventAttached = true;
+    this.closest('.form-group').classList.remove('invalid');
+    this.closest('.form-group').classList.remove('bad-url');
+  }
+
+  return {
+    isValid(form) {
+      let valid = true;
+      for (let input of form.querySelectorAll('input')) {
+
+        if (!eventAttached) input.addEventListener('focus', focusCB);
+
+        if (input.value == '') {
+          input.closest('.form-group').classList.add('invalid');
+          valid = valid && false;
+        } else {
+
+          try {
+            new URL(input.value);
+            input.closest('.form-group').classList.remove('invalid');
+            input.closest('.form-group').classList.remove('invalid-url');
+            valid = valid && true;
+          } catch (error) {
+            input.closest('.form-group').classList.add('bad-url');
+            input.closest('.form-group').classList.add('invalid');
+            valid = valid && false;
+          }
+        }
+      }
+      return valid;
+    }
+  }
+})();
