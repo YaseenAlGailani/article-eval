@@ -15,10 +15,10 @@ app.use(cors({
     origin: ['http://localhost:3000', 'http://localhost:8080']
 }))
 
-app.use(express.static(path.resolve('src/client')))
+app.use(express.static(path.resolve('dist')))
 
 app.get('/', function(req, res){
-    res.sendFile(path.resolve('src/client/views/index.html'))
+    res.sendFile(path.resolve('dist/index.html'))
 })
 
 app.get('/MCk', function(req,res){

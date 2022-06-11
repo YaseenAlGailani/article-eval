@@ -40,7 +40,3 @@ module.exports = {
         new MiniCssExtractPlugin()
     ]
 }
-
-//js -> entry point, babel, tetzer(built in)
-//css -> sass-loader, css-loader, MiniCssExtractPlugin.loader
-//images ->assets
