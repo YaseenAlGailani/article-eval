@@ -1,5 +1,7 @@
 import './styles/main.scss'
 import getEvaluation from './js/getEvaluation'
+import transitions from './js/transitions'
+import validate from './js/validation'
 
 window.addEventListener('DOMContentLoaded', function () {
 
@@ -46,109 +48,29 @@ function getUserInput(form) {
   return inputValues;
 }
 
-const updateUI = {
-
-  fetching() {
-    transitions.fadeOut(document.getElementById('error-box'));
-    transitions.fadeOut(document.getElementById('eval-results'));
-    transitions.fadeIn(document.querySelector('.backdrop'));
-  },
-  dispResults(values) {
-    document.getElementById('pol').innerText = values.polarity;
-    document.getElementById('sub').innerText = values.subjectivity;
-    document.getElementById('sentences').innerText = values.sentences;
-
-    transitions.fadeIn(document.getElementById('eval-results'));
-    transitions.fadeOut(document.querySelector('.backdrop'));
-  },
-  error(error) {
-    document.getElementById('error-box').querySelector('.message').innerHTML = error;
-    transitions.fadeOut(document.querySelector('.backdrop'));
-    transitions.fadeIn(document.getElementById('error-box'));
-  }
-
-}
-
-const transitions = (() => {
-
-  const handleTransEnd = element => {
-    return new Promise((resolve) => {
-      const callback = (e) => {
-        e.stopPropagation();
-        element.classList.remove('transition');
-        resolve(callback);
-      }
-      element.addEventListener('transitionend', callback);
-    }).then((callback) => {
-      element.removeEventListener('transitionend', callback);
-    });
-  }
+const updateUI = (()=>{
+  const backdrop = document.querySelector('.backdrop');
+  const evalResults = document.getElementById('eval-results');
+  const errorBox = document.getElementById('error-box');
 
   return {
-    fadeInOut: element => {
-      if (element.classList.contains('hidden')) {
-        element.classList.add('transition');
-        element.clientHeight;
-        element.classList.remove('hidden');
-      } else {
-        element.classList.add('transition');
-        element.classList.add('hidden');
-      }
-      return handleTransEnd(element);
+    fetching() {
+      transitions.fadeOut(errorBox);
+      transitions.fadeOut(evalResults);
+      transitions.fadeIn(backdrop);
     },
-    fadeIn: element => {
-      if (element.classList.contains('hidden')) {
-        element.classList.add('transition');
-        element.clientHeight;
-        element.classList.remove('hidden');
-        return handleTransEnd(element);
-      }
+    dispResults(values) {
+      document.getElementById('pol').innerText = values.polarity;
+      document.getElementById('sub').innerText = values.subjectivity;
+      document.getElementById('sentences').innerText = values.sentences;
+      
+      transitions.fadeIn(evalResults);
+      transitions.fadeOut(backdrop);
     },
-    fadeOut: element => {
-      if (!element.classList.contains('hidden')) {
-        element.classList.add('transition');
-        element.classList.add('hidden');
-        return handleTransEnd(element);
-      }
-    },
-  }
-})()
-
-const validate = (() => {
-
-  let eventAttached = false;
-
-  function focusCB(e) {
-    eventAttached = true;
-    this.closest('.form-group').classList.remove('invalid');
-    this.closest('.form-group').classList.remove('bad-url');
-  }
-
-  return {
-    isValid(form) {
-      let valid = true;
-      for (let input of form.querySelectorAll('input')) {
-
-        if (!eventAttached) input.addEventListener('focus', focusCB);
-
-        if (input.value == '') {
-          input.closest('.form-group').classList.add('invalid');
-          valid = valid && false;
-        } else {
-
-          try {
-            new URL(input.value);
-            input.closest('.form-group').classList.remove('invalid');
-            input.closest('.form-group').classList.remove('invalid-url');
-            valid = valid && true;
-          } catch (error) {
-            input.closest('.form-group').classList.add('bad-url');
-            input.closest('.form-group').classList.add('invalid');
-            valid = valid && false;
-          }
-        }
-      }
-      return valid;
+    error(error) {
+      errorBox.querySelector('.message').innerHTML = error;
+      transitions.fadeOut(backdrop);
+      transitions.fadeIn(errorBox);
     }
   }
 })();
